@@ -1,0 +1,92 @@
+✅ A. Scalar Subquery
+
+Returns a single value — used with =, >, <, <=, >=.
+
+Example: Find employees earning more than the average salary
+
+SELECT name, salary
+FROM employees
+WHERE salary > (
+    SELECT AVG(salary)
+    FROM employees
+);
+
+✅ B. Multi-Row Subquery (IN, NOT IN)
+
+Example: Employees working in departments located in 'Delhi'
+
+SELECT name
+FROM employees
+WHERE dept_id IN (
+    SELECT dept_id
+    FROM departments
+    WHERE location = 'Delhi'
+);
+
+✅ C. EXISTS Subquery
+
+Used to check if at least one matching row exists.
+
+Example: Get customers who have placed orders
+
+SELECT customer_name
+FROM customers c
+WHERE EXISTS (
+    SELECT 1
+    FROM orders o
+    WHERE o.customer_id = c.customer_id
+);
+
+✅ D. Correlated Subquery
+
+The inner query depends on the outer query — executed for each row.
+
+Example: Get employees whose salary is above the average salary of their department
+
+SELECT name, salary, dept_id
+FROM employees e
+WHERE salary > (
+    SELECT AVG(salary)
+    FROM employees
+    WHERE dept_id = e.dept_id
+);
+
+
+✔ Inner query uses a column from the outer query (e.dept_id)
+
+✅ E. Subquery with =
+
+Used when the result returns a single value.
+
+Example: Find the employee with the highest salary
+
+SELECT name, salary
+FROM employees
+WHERE salary = (
+    SELECT MAX(salary)
+    FROM employees
+);
+
+✅ Quick Comparison Table
+Type			Returns		Used With		Example Use
+Scalar			1 		value			=, >, <, >=, <=	Avg salary
+Multi-row		Multiple rows	IN, NOT IN		City filter
+EXISTS			True/False	EXISTS, NOT EXISTS	Order check
+Correlated		Varies		WHERE, EXISTS		Row-wise
+Table Subquery		Full table	FROM or JOIN		Derived data
+
+✅ Example Using Multiple Features Together
+
+Find products whose total sales amount is above average overall sales:
+
+SELECT product_id, SUM(amount) AS total_sales
+FROM orders o
+GROUP BY product_id
+HAVING SUM(amount) > (
+    SELECT AVG(total_sales)
+    FROM (
+        SELECT SUM(amount) AS total_sales
+        FROM orders
+        GROUP BY product_id
+    ) AS product_totals
+);

@@ -1,0 +1,89 @@
+✅ 1. What is a subquery?
+
+A subquery is a query written inside another SQL query. It can be placed in SELECT, WHERE, HAVING, or FROM to provide intermediate results used by the main query.
+
+✅ 2. Difference between subquery and join?
+Feature	Subquery	Join
+Execution	Inner query executes first	Executes simultaneously
+Readability	Often simpler for conditions	Better for combining data
+Rows returned	Can return scalar/multiple rows	Returns combined rows
+Performance	Sometimes slower	Usually faster
+✅ 3. What is a correlated subquery?
+
+A correlated subquery depends on the outer query and runs once per row.
+
+✅ Example:
+
+SELECT name, salary
+FROM employees e
+WHERE salary > (
+    SELECT AVG(salary)
+    FROM employees
+    WHERE dept_id = e.dept_id
+);
+
+✅ 4. Can subqueries return multiple rows?
+
+✅ Yes. A subquery can return:
+
+One value → used with =, <, >
+
+Multiple values → used with IN, ANY, ALL
+
+✅ 5. How does EXISTS work?
+
+EXISTS returns TRUE if the subquery returns at least one row.
+
+✅ Example:
+
+SELECT customer_name
+FROM customers c
+WHERE EXISTS (
+    SELECT 1
+    FROM orders o
+    WHERE o.customer_id = c.customer_id
+);
+
+✅ 6. How is performance affected by subqueries?
+
+Scalar and simple subqueries are efficient.
+
+Correlated subqueries can be slow because they run for each row.
+
+In many cases, a JOIN performs better than a nested subquery.
+
+✅ 7. What is a scalar subquery?
+
+A scalar subquery returns exactly one value.
+
+✅ Example:
+
+SELECT name, salary
+FROM employees
+WHERE salary = (
+    SELECT MAX(salary)
+    FROM employees
+);
+
+✅ 8. Where can we use subqueries?
+
+You can use subqueries in:
+
+SELECT, WHERE, HAVING, FROM, INSERT, UPDATE, DELETE
+
+✅ 9. Can a subquery be in FROM clause?
+
+✅ Yes. That's called a derived table or inline view.
+
+✅ Example:
+
+SELECT dept_id, avg_salary
+FROM (
+    SELECT dept_id, AVG(salary) AS avg_salary
+    FROM employees
+    GROUP BY dept_id
+) AS dept_avg;
+
+✅ 10. What is a derived table?
+
+A derived table is a subquery used inside the FROM clause which acts as a temporary table for the main query.
